@@ -337,8 +337,8 @@ tuning_reports/translatewiki.reverted.md: \
 	cat $< | \
 	revscoring tune \
 		config/classifiers.params.yaml \
-		editquality.feature_lists.translatewiki.damaging \
-		damaging \
+		editquality.feature_lists.translatewiki.reverted \
+		reverted_for_damage \
 		roc_auc.labels.true \
 		--label-weight "true=$(reverted_weight)" \
 		--pop-rate "true=0.00073" \
@@ -348,6 +348,22 @@ tuning_reports/translatewiki.reverted.md: \
 		--cv-timeout=60 \
 		--debug > $@
 
+
+models/translatewiki.reverted.random_forest.model: \
+		datasets/translatewiki.stratified_revisions.w_cache.25k_2018.json
+	cat $< | \
+	revscoring cv_train \
+		revscoring.scoring.models.RandomForest \
+		editquality.feature_lists.translatewiki.reverted \
+		reverted_for_damage \
+		--version=$(reverted_major_minor).0 \
+		-p 'max_features="log2"' \
+		-p 'criterion="entropy"' \
+		-p 'min_samples_leaf=1' \
+		-p 'n_estimators=160' \
+		--label-weight "true=$(reverted_weight)" \
+		--labels "true,false" \
+		--center --scale > $@
 
 ################################### Wikidata ##################################
 
