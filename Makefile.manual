@@ -365,6 +365,12 @@ models/translatewiki.reverted.random_forest.model: \
 		--labels "true,false" \
 		--center --scale > $@
 
+translatewiki_models: \
+                models/translatewiki.reverted.random_forest.model
+
+translatewiki_tuning_reports: \
+                tuning_reports/translatewiki.reverted.md
+
 ################################### Wikidata ##################################
 
 # wikidatawiki.balanced_revisions.20k_2015.json is check into the repo
